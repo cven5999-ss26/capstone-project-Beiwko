@@ -1,0 +1,17 @@
+---
+title: "Data Exploration for capstone-project-Beiwko"
+author: Benon Okwi
+  - name: "Benon Okwi"
+    orcid: "0009-0005-4173-3395"
+    email: "beok8551l@colorado.edu"
+    affiliation:
+      - name: "University of Colorado Boulder"
+        department: "Department of Civil, Environmental and Architectural Engineering"
+        city: "Boulder"
+        state: "CO"
+        country: "USA"
+date: Jul 3, 2026
+format: html
+editor: visual
+---
+
