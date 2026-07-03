@@ -14,3 +14,35 @@ date: Jul 3, 2026
 format: html
 editor: visual
 ---
+
+# Introduction
+
+My project is on rural electrification in the world and the data is the percentage of rural access, taken from 1960 to 2025. The data is from the world bank and it contains the different countries and their country codes with the indicator names and the years the data was captured.
+
+# Methods
+
+Compiled from nationally representative household survey data, and occasionally census data, from sources going back as far as 1990 by the world bank Global Electrification Database (GED)
+
+## Reading the Data
+
+```{r}
+
+library(tidyverse)
+
+my_project_data <- read_csv(here::here("data/raw/Access_to_Electricity_Rural.csv"))
+
+```
+
+## Data Exploration Approach
+
+## Initial Data Tidying
+
+# Results
+
+\[This will be the core of your analysis with specific requirements\]
+
+# Conclusions
+
+## Summary of Findings
+
+## Questions and Next Steps
