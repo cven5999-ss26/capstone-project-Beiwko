@@ -39,7 +39,14 @@ my_project_data <- read_csv(here::here("data/raw/Access_to_Electricity_Rural.csv
 
 # Results
 
-\[This will be the core of your analysis with specific requirements\]
+## Initial Data Exploration
+
+```{r}
+
+head(my_project_data)
+
+dim(my_project_data)
+```
 
 # Conclusions
 
