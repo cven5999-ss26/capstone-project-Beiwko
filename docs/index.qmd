@@ -1,0 +1,87 @@
+---
+title: "Data Exploration for capstone-project-Beiwko"
+author:
+  - name: "Benon Okwi"
+    orcid: "0009-0005-4173-3395"
+    email: "beok8551l@colorado.edu"
+    affiliation:
+      - name: "University of Colorado Boulder"
+        department: "Department of Civil, Environmental and Architectural Engineering"
+        city: "Boulder"
+        state: "CO"
+        country: "USA"
+date: today
+format: html
+editor: visual
+---
+
+# Introduction
+
+My project is on rural electrification in the world and the data is the percentage of rural access, taken from 1960 to 2025(Populated years from 1990-2023). The data is from the world bank and it contains the different countries and their codes with the indicator names and their codes and the years the data was captured.
+
+# Methods
+
+Compiled from nationally representative household survey data, and occasionally census data, from sources going back as far as 1990 by the world bank Global Electrification Database (GED)
+
+## Reading the Data
+
+```{r}
+
+library(tidyverse)
+library(dplyr)
+
+my_project_data <- read_csv(
+  here::here("data/raw/Access_to_Electricity_Rural.csv"),
+  skip = 4)
+
+countries_meta <- read_csv(
+  here::here("data/raw/Metadata_country.csv"))
+```
+
+## Data Exploration Approach
+
+## Initial Data Tidying
+
+```{r}
+
+tidy_data <- my_project_data |>
+  pivot_longer(
+    cols = `1960`:`2025`,
+    names_to = "year",
+    values_to = "access_rural_pct") |>
+  mutate(year = as.integer(year)) |>
+  filter(!is.na(access_rural_pct))
+
+
+tidy_countries <- tidy_data |>
+  left_join(countries_meta, by = "Country Code") |>
+  filter(!is.na(Region))
+
+write_csv(tidy_data, here::here("data/processed/tidy_data.csv"))
+```
+
+# Results
+
+## Initial Data Exploration
+
+```{r}
+
+head(tidy_data)
+
+dim(tidy_data)
+
+tidy_data |>
+  group_by(`year`) |>
+  summarise(mean = mean(access_rural_pct),
+            median = median(access_rural_pct),
+            sd = sd(access_rural_pct))
+
+
+
+```
+
+# Conclusions
+
+## Summary of Findings
+
+## Questions and Next Steps
