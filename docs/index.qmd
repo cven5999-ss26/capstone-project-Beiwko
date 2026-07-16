@@ -11,6 +11,7 @@ author:
         state: "CO"
         country: "USA"
 date: today
+toc: true
 format: html
 editor: visual
 ---
@@ -29,6 +30,7 @@ Compiled from nationally representative household survey data, and occasionally 
 
 library(tidyverse)
 library(dplyr)
+library(ggplot2)
 
 my_project_data <- read_csv(
   here::here("data/raw/Access_to_Electricity_Rural.csv"),
@@ -62,6 +64,8 @@ write_csv(tidy_data, here::here("data/processed/tidy_data.csv"))
 
 # Results
 
+To focus on the East African Region (Uganda, Kenya, Tanzania, Ethiopia and Rwanda). Rural Electrification in the region was minimal to bumpy before 2000 upto mid-2000s where we see a signifcant take-off. Uganda saw meagre rural electrification prior to 2000 with below 2% of the population having access. There we tiny increaments in access after 2000, between 2000 and 2018, there were fluctuations recorded in access, with more significant rises recorded from 2018 to 2023. Kenya went from 7% in 2000 to 65% in 2022, they enjoyed more steaper increments in access across the whole region. Tanzania has a similar case with Uganda with insignicifant increments in access till around 2012 where access started to shoot up significantly through to 2022. Ethiopia shows gradual increase in access between 2004 and 2012 before experiencing more gradient increase in access post 2014. Signficant %access increase in Rwanda is recorded post 2010 having barely had any rural access prior to 2008.
+
 ## Initial Data Exploration
 
 ```{r}
@@ -82,6 +86,4 @@ tidy_data |>
 
 # Conclusions
 
-## Summary of Findings
-
-## Questions and Next Steps
+Between 2000 and 2022, global rural electricity access rose from about 67% to 84%, but progress was highly uneven: high-income regions were already near-universal by 2000, while South Asia and many individual countries (Bangladesh, Bhutan, Cambodia, Rwanda, Kenya) made dramatic gains from low starting points to reach 85–100% access. Sub-Saharan Africa and the lowest-income countries, however, lagged far behind, rising only from about 12% to 31%, with 40 countries still below 50% access in 2022 and the poorest — including the Democratic Republic of Congo, Chad, and the Central African Republic — stuck under 5%, essentially unchanged in two decades. This divergence shows that rural electrification progress depends more on national policy and investment than on the simple passage of time, and that closing the remaining gap will require targeted intervention in the specific countries where progress has stalled.
