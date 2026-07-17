@@ -11,8 +11,8 @@ author:
         state: "CO"
         country: "USA"
 date: today
-toc: true
 format: html
+toc: true
 execute:
   warning: false
 editor: visual
@@ -24,15 +24,18 @@ My project is on rural electrification in the world and the data is the percenta
 
 # Methods
 
-Compiled from nationally representative household survey data, and occasionally census data, from sources going back as far as 1990 by the world bank Global Electrification Database (GED)
+Compiled from nationally representative household survey data, and occasionally census data, from sources going back as far as 1990 by the world bank Global Electrification Database (GED) The data is initially in wide format with one country per row and one year per column
 
 ## Reading the Data
+
+we use the skip = 4 to skip the four metadata lines that appear above the actual column headers
 
 ```{r}
 
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
+library(gt)
 
 my_project_data <- read_csv(
   here::here("data/raw/Access_to_Electricity_Rural.csv"),
@@ -45,6 +48,8 @@ countries_meta <- read_csv(
 ## Data Exploration Approach
 
 ## Initial Data Tidying
+
+We reshape the data to long format using pivot_longer() and we filter out the non numeric columns. We also filter out the non numeric data in the regions.
 
 ```{r}
 
@@ -95,13 +100,14 @@ tidy_data_yr_2022 <- tidy_data|>
   filter(year == 2022)
 ```
 
-Data Visualization
+## **Data Visualization**
 
-@fig-eastafrica is a plot of % rural electrification access in East Africa vs Sub-Saharan Africa Averages from 2000-2022
+@fig-eastafrica is a plot of % rural electrification access in East Africa vs Sub-Saharan Africa Averages from 2000-2022. It shows how access has grown in the region over the last 22 years with a mix of bumps and gradual increase in access.
 
 ```{r}
-
-
+#| label: fig-eastafrica
+#| fig-cap: "Rural electricity access, East Africa vs. Sub-Saharan Africa Averages, 2000-2022"
+#| fig-alt: "Line chart showing rural electricity access percentage from 2000 to 2022. Kenya, Ethiopia, and Rwanda rise sharply from near zero to 40-65 percent, Uganda is up and down till 2015 when it takes a sharper rise"
 
 countries_of_interest <- c("Kenya", "Ethiopia", "Rwanda", "Tanzania", 
                            "Uganda", "Sub-Saharan Africa")
@@ -125,10 +131,6 @@ my_linetypes <- c(
   "Tanzania" = "solid",
   "Uganda" = "solid",
   "Sub-Saharan Africa" = "dashed")
-
-#| label: fig-eastafrica
-#| fig-cap: "Rural electricity access, East Africa vs. Sub-Saharan Africa Averages, 2000-2022"
-#| fig-alt: "Line chart showing rural electricity access percentage from 2000 to 2022. Kenya, Ethiopia, and Rwanda rise sharply from near zero to 40-65 percent, Uganda is up and down till 2015 when it takes a sharper rise"
 
 
 ggplot(plot_data, aes(x = year, y = access_rural_pct, 
@@ -156,10 +158,9 @@ ggsave(here::here("output/rural_electricity_trend.png"),
 
 ```
 
-@fig-region2022 shows rural electricity access by region and income group, 2022
+@fig-region2022 shows rural electricity access by region and income group, 2022. Notably, North America, Europe and Central Asia are doing wonderfully similar to High-income countries with Sub-Saharan Africa and Low-Income countries lagging behind.
 
 ```{r}
-
 #| label: fig-region2022
 #| fig-cap: "Rural electricity access by region and income group, 2022"
 #| fig-alt: "Horizontal bar chart of rural electricity access by region in 2022. North America, Europe and Central Asia, and high-income countries are at or near 100 percent. Sub-Saharan Africa and low-income countries lag far behind at 25 to 31 percent, well below the world average of 84 percent."
@@ -184,6 +185,50 @@ ggplot(region_data, aes(x = access_rural_pct,
   theme(panel.grid.major.y = element_blank())
 ```
 
+@tbl-summary shows summary statistics for rural electrification Access in East Africa and Sub-Saharan Region, 2000 - 2022 with Kenya having the highest mean % and Maximum in the region and Tanzania statistics showing there is very slow and minimal access. The East African region is below the Sub-Saharan region averages bar Kenya.
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics for rural electricity access in East African Countries, 2000 - 2022"
+
+summary_table <- plot_data |>
+  group_by(`Country Name`) |>
+  summarise(
+    Mean = mean(access_rural_pct, na.rm = TRUE),
+    Median = median(access_rural_pct, na.rm = TRUE),
+    SD = sd(access_rural_pct, na.rm = TRUE),
+    Min = min(access_rural_pct, na.rm = TRUE),
+    Max = max(access_rural_pct, na.rm = TRUE),
+    N = n()
+  ) |>
+  arrange(desc(Mean))
+
+summary_table |>
+  gt() |>
+  cols_label(
+    `Country Name` = "Country",
+    Mean = "Mean (%)",
+    Median = "Median (%)",
+    SD = "Std. dev.",
+    Min = "Min (%)",
+    Max = "Max (%)",
+    N = "Years"
+  ) |>
+  fmt_number(columns = c(Mean, Median, SD, Min, Max), decimals = 1) |>
+  cols_align(align = "center", columns = c(Mean, Median, SD, Min, Max, N))
+
+```
+
 # Conclusions
 
-\- Rural electricity access rose globally from \~67% to \~84% between 2000 and 2022, but progress was highly uneven across regions. - East African countries (Kenya, Ethiopia, Rwanda) saw the largest gains, several multiplying access five- to twenty-fold from very low bases(see @fig-eastafrica). - Nigeria, despite a higher 2000 starting point, saw almost no sustained improvement and was overtaken by countries that started far behind it. - Sub-Saharan Africa and low-income countries overall lag significantly, with 40 countries still below 50% rural access in 2022. - Closing the remaining gap likely requires targeted national policy, not just general economic growth.
+- Rural electricity access rose globally from \~67% to \~84% between 2000 and 2022, but progress was highly uneven across regions.
+
+- East African countries (Kenya, Ethiopia, Rwanda) saw the largest gains, several multiplying access five- to twenty-fold from very low bases(see @fig-eastafrica). - Nigeria, despite a higher 2000 starting point, saw almost no sustained improvement and was overtaken by countries that started far behind it.
+
+- Sub-Saharan Africa and low-income countries overall lag significantly, with 40 countries still below 50% rural access in 2022.
+
+-  Closing the remaining gap likely requires targeted national policy, not just general economic growth.
+
+## **Summary of Findings** 
+
+Since my reason for choosing rural electrification was to to see how the progress has been for rural Uganda where i come from, I tried to focus my visualizations on Uganda and East Africa. The trajectory of % access in uganda was generally underwhelming for the most part. In the last 5 years the government rolled out a Rural Electrification project so the next World Bank data post 2025 will surely and hopefully show a more exponential growth curve in access.
